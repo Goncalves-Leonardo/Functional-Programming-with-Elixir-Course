@@ -1,0 +1,10 @@
+{application,friends_app,
+             [{applications,[kernel,stdlib,elixir,logger]},
+              {description,"friends_app"},
+              {modules,['Elixir.FriendsApp','Elixir.FriendsApp.CLI.Main',
+                        'Elixir.FriendsApp.CLI.Menu',
+                        'Elixir.FriendsApp.CLI.MenuChoice',
+                        'Elixir.FriendsApp.CLI.MenuItens',
+                        'Elixir.Mix.Tasks.Start']},
+              {registered,[]},
+              {vsn,"0.1.0"}]}.
