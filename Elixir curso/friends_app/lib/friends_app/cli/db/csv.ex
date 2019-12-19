@@ -9,13 +9,23 @@ defmodule FriendsApp.DB.CSV do
        %Menu{ id: :create, label: _ } -> create()
        %Menu{ id: :update, label: _ } -> Shell.info(">>>>>>>>>> UPDATE <<<<<<<<<<")
        %Menu{ id: :delete, label: _ } -> Shell.info(">>>>>>>>>> DELETE <<<<<<<<<<")
-       %Menu{ id: :read, label: _ } -> Shell.info(">>>>>>>>>> READ <<<<<<<<<<")
+       %Menu{ id: :read, label: _ } -> read()
     end
     FriendsApp.CLI.Menu.Choice.start()
   end
 
+  defp read do
+    File.read!("#{File.cwd!}/friends.csv")
+    |> CSVparser.parse_string(headers: false)
+    |> Enum.map( fn [email, name, phone] ->
+      %Friend{name: name, email: email, phone: phone}
+    end)
+    |> Scribe.console(data: [{"Nome", :name},{"Email", :email},{"Telefone", :phone}])
+  end
+
   defp create do
     collect_data
+    |> Map.from_struct
     |> Map.values()
     |> wrap_in_list()
     |> CSVparser.dump_to_iodata()
@@ -24,7 +34,7 @@ defmodule FriendsApp.DB.CSV do
 
   defp collect_data do
     Shell.cmd("clear")
-    %{
+    %Friend{
       name: prompt_message("Digite o nome: "),
       email: prompt_message("Digite o email: "),
       phone: prompt_message("Digite o telefone: ")
